@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="order-details">
+        <table></table>
+        <tr>Назва товару: </tr>
+        <tr>{{product.name}}</tr>
+        <tr>Ціна:< </tr>
+        <tr>{{product.price}}</tr>
+        <tr>{{product.}}</tr>
+        <tr>Опис:</tr>
+        <tr>{{product.decription}}</tr>
+        </table>
+    </div>
+
+    <div>
+        <form action="/send-review" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id_user" value="1">
+            <input type="hidden" name="id_product" value="{{product._id}}">
+            <label for="mark">Оцінка (від 1 до 5):</label>
+            <input type="number" id="mark" name="mark" min="1" max="5">
+            <label for="mark_desc">Опис оцінки:</label>
+            <textarea id="mark_desc" name="mark_desc" cols="30" rows="10"></textarea>
+            <button type="submit" class="btn btn-success">Відправити</button>
+        </form>
+    </div>
+        {% for i in reviews %}
+        <div class="order-container">
+
+    <h2>Коментарі</h2>
+    <div id="comments-container">
+        {% endfor %}
+    </div>
+
+    <h2>Додати коментар</h2>
+    <form id="comment-form">
+        <div class="mb-3">
+            <label for="comment-author" class="form-label">Ім'я:</label>
+            <input type="text" class="form-control" id="comment-author" required>
+        </div>
+        <div class="mb-3">
+            <label for="comment-text" class="form-label">Коментар:</label>
+            <textarea class="form-control" id="comment-text" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Додати коментар</button>
+    </form>
+</div>
+
+<script>
+    const commentsContainer = document.getElementById("comments-container");
+    const commentForm = document.getElementById("comment-form");
+
+    commentForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const authorInput = document.getElementById("comment-author");
+        const textArea = document.getElementById("comment-text");
+
+        const author = authorInput.value;
+        const text = textArea.value;
+
+        if (author && text) {
+            const commentDiv = document.createElement("div");
+            commentDiv.classList.add("comment");
+            commentDiv.innerHTML = `
+                <strong>${author}:</strong>
+                <p>${text}</p>
+            `;
+            commentsContainer.appendChild(commentDiv);
+
+            // Очистити поля вводу
+            authorInput.value = "";
+            textArea.value = "";
+        }
+    });
+</script>
+    </div>
+
+{% endblock %}
